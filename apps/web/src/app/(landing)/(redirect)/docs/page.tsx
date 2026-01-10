@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
 export default function DiscordRedirect() {
-  return redirect("https://docs.pingora.dev");
+  const docsUrl = process.env.NEXT_PUBLIC_DOCS_URL || "https://docs.pingora.dev";
+  return redirect(docsUrl);
 }
