@@ -28,7 +28,7 @@ const resourcesFooterSection = {
     },
     {
       label: "Docs",
-      href: `${process.env.NEXT_PUBLIC_DOCS_URL}`,
+      href: "/docs",
     },
     {
       label: "External Status",
@@ -40,7 +40,7 @@ const resourcesFooterSection = {
     },
     {
       label: "Marketing V1",
-      href: process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}/v1` : "https://v1.pingora.dev",
+      href: process.env.NEXT_PUBLIC_APP_URL ? `${process.env.NEXT_PUBLIC_APP_URL}/v1` : "/v1",
     },
   ],
 };
@@ -50,7 +50,7 @@ const resourcesHeaderSection = {
   items: [
     {
       label: "Docs",
-      href: `${process.env.NEXT_PUBLIC_DOCS_URL}`,
+      href: "/docs",
     },
     {
       label: "Blog",

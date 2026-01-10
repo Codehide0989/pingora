@@ -10,7 +10,7 @@ export function FooterStatus() {
     queryKey: ["footer-status"],
     queryFn: async () => {
       const res = await fetch(
-        "https://api.pingora.dev/public/status/status",
+        "/api/status/status", // Assuming local proxy or API route
       );
       if (!res.ok) return { status: "unknown" as const };
       return (await res.json()) as StatusResponse;
@@ -23,7 +23,7 @@ export function FooterStatus() {
 
   return (
     <Link
-      href="https://status.pingora.dev"
+      href="/status"
       className={cn(
         "flex w-full items-center gap-2 p-4 hover:bg-muted",
         STATUS[status].color,

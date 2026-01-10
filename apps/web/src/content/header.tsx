@@ -39,7 +39,7 @@ export function Header() {
           <ContextMenuItem className="rounded-none px-2 py-3 font-mono" asChild>
             {/* FIXME: use relative path */}
             <a
-              href="https://pingora.dev/assets/logos/Pingora.svg"
+              href="/assets/logos/Pingora.svg"
               download="pingora.svg"
             >
               Download Name SVG
@@ -47,7 +47,7 @@ export function Header() {
           </ContextMenuItem>
           <ContextMenuItem className="rounded-none px-2 py-3 font-mono" asChild>
             <a
-              href="https://pingora.dev/assets/logos/Pingora-Logo.svg"
+              href="/assets/logos/Pingora-Logo.svg"
               download="pingora-logo.svg"
             >
               Download Logo SVG
@@ -89,7 +89,7 @@ export function Header() {
       </Link>
       <CmdK />
       <Link
-        href="https://app.pingora.dev/login"
+        href="/login"
         className="truncate text-info"
       >
         Dashboard
