@@ -89,7 +89,7 @@ export function Header() {
       </Link>
       <CmdK />
       <Link
-        href="/login"
+        href={`${process.env.NEXT_PUBLIC_APP_URL}/login`}
         className="truncate text-info"
       >
         Dashboard

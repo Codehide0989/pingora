@@ -173,3 +173,17 @@ Videos to better understand the Pingora codebase:
 
 - [The code behind Pingora and how it uses Turbopack](https://youtube.com/watch?v=PYfSJATE8v8).
 - [Drop Betterstack and go open source](https://www.youtube.com/watch?v=PKag0USy3eQ)
+
+## Deployment
+
+### Vercel
+
+1. Fork this repository.
+2. Create a new project on Vercel.
+3. Import your forked repository.
+4. In the Project Settings > Environment Variables, add the following:
+    - NEXT_PUBLIC_APP_URL: The URL of your deployed dashboard (e.g., https://dashboard.your-domain.com).
+    - NEXT_PUBLIC_DOCS_URL: The URL for documentation (optional, defaults to this repo's wiki or similar).
+    - NEXT_PUBLIC_URL: The URL of your landing page.
+5. Vercel will automatically detect the multiple apps (monorepo). You can configure the Root Directory if you are deploying a specific app, or let Vercel handle the Turborepo setup.
+
