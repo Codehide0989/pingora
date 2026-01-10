@@ -1,0 +1,25 @@
+name: Run Pingora Synthetics CI
+
+on:
+  workflow_run:
+      workflows: ['Fly Deploy']
+      types: [completed]
+      branches:
+        - main
+  repository_dispatch:
+      types:
+        - 'vercel.deployment.success'
+      branches:
+        - main
+
+jobs:
+  synthetic_ci:
+    runs-on: depot-ubuntu-24.04-4
+    name: Run Pingora Synthetics CI
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run Pingora Synthetics CI
+        uses: pingorahq/pingora-github-action@v1
+        with:
+          api_key: ${{ secrets.PINGORA_API_KEY }}

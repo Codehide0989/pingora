@@ -1,0 +1,145 @@
+import type {
+  Monitor,
+  Notification,
+  NotificationProvider,
+} from "@pingora/db/src/schema";
+import type { Region } from "@pingora/db/src/schema/constants";
+import {
+  sendAlert as sendDiscordAlert,
+  sendDegraded as sendDiscordDegraded,
+  sendRecovery as sendDiscordRecovery,
+} from "@pingora/notification-discord";
+import {
+  sendAlert as sendEmailAlert,
+  sendDegraded as sendEmailDegraded,
+  sendRecovery as sendEmailRecovery,
+} from "@pingora/notification-emails";
+import {
+  sendAlert as sendGoogleChatAlert,
+  sendDegraded as sendGoogleChatDegraded,
+  sendRecovery as sendGoogleChatRecovery,
+} from "@pingora/notification-google-chat";
+import {
+  sendAlert as sendNtfyAlert,
+  sendDegraded as sendNtfyDegraded,
+  sendRecovery as sendNtfyRecovery,
+} from "@pingora/notification-ntfy";
+import {
+  sendAlert as sendOpsGenieAlert,
+  sendDegraded as sendOpsGenieDegraded,
+  sendRecovery as sendOpsGenieRecovery,
+} from "@pingora/notification-opsgenie";
+import {
+  sendDegraded as sendPagerDutyDegraded,
+  sendRecovery as sendPagerDutyRecovery,
+  sendAlert as sendPagerdutyAlert,
+} from "@pingora/notification-pagerduty";
+import {
+  sendAlert as sendSlackAlert,
+  sendDegraded as sendSlackDegraded,
+  sendRecovery as sendSlackRecovery,
+} from "@pingora/notification-slack";
+import {
+  sendAlert as sendTelegramAlert,
+  sendDegraded as sendTelegramDegraded,
+  sendRecovery as sendTelegramRecovery,
+} from "@pingora/notification-telegram";
+import {
+  sendAlert as sendSmsAlert,
+  sendDegraded as sendSmsDegraded,
+  sendRecovery as sendSmsRecovery,
+} from "@pingora/notification-twillio-sms";
+import {
+  sendAlert as sendWhatsappAlert,
+  sendDegraded as sendWhatsappDegraded,
+  sendRecovery as sendWhatsappRecovery,
+} from "@pingora/notification-twillio-whatsapp";
+import {
+  sendAlert as sendWebhookAlert,
+  sendDegraded as sendWebhookDegraded,
+  sendRecovery as sendWebhookRecovery,
+} from "@pingora/notification-webhook";
+
+type SendNotification = ({
+  monitor,
+  notification,
+  statusCode,
+  message,
+  incidentId,
+  cronTimestamp,
+  latency,
+  region,
+}: {
+  monitor: Monitor;
+  notification: Notification;
+  statusCode?: number;
+  message?: string;
+  incidentId?: string;
+  cronTimestamp: number;
+  latency?: number;
+  region?: Region;
+}) => Promise<void>;
+
+type Notif = {
+  sendAlert: SendNotification;
+  sendRecovery: SendNotification;
+  sendDegraded: SendNotification;
+};
+
+export const providerToFunction = {
+  discord: {
+    sendAlert: sendDiscordAlert,
+    sendRecovery: sendDiscordRecovery,
+    sendDegraded: sendDiscordDegraded,
+  },
+  email: {
+    sendAlert: sendEmailAlert,
+    sendRecovery: sendEmailRecovery,
+    sendDegraded: sendEmailDegraded,
+  },
+  "google-chat": {
+    sendAlert: sendGoogleChatAlert,
+    sendRecovery: sendGoogleChatRecovery,
+    sendDegraded: sendGoogleChatDegraded,
+  },
+  ntfy: {
+    sendAlert: sendNtfyAlert,
+    sendRecovery: sendNtfyRecovery,
+    sendDegraded: sendNtfyDegraded,
+  },
+  opsgenie: {
+    sendAlert: sendOpsGenieAlert,
+    sendRecovery: sendOpsGenieRecovery,
+    sendDegraded: sendOpsGenieDegraded,
+  },
+  pagerduty: {
+    sendAlert: sendPagerdutyAlert,
+    sendRecovery: sendPagerDutyRecovery,
+    sendDegraded: sendPagerDutyDegraded,
+  },
+  slack: {
+    sendAlert: sendSlackAlert,
+    sendRecovery: sendSlackRecovery,
+    sendDegraded: sendSlackDegraded,
+  },
+  sms: {
+    sendAlert: sendSmsAlert,
+    sendRecovery: sendSmsRecovery,
+    sendDegraded: sendSmsDegraded,
+  },
+  webhook: {
+    sendAlert: sendWebhookAlert,
+    sendRecovery: sendWebhookRecovery,
+    sendDegraded: sendWebhookDegraded,
+  },
+  whatsapp: {
+    sendAlert: sendWhatsappAlert,
+    sendRecovery: sendWhatsappRecovery,
+    sendDegraded: sendWhatsappDegraded,
+  },
+  telegram: {
+    sendAlert: sendTelegramAlert,
+    sendRecovery: sendTelegramRecovery,
+    sendDegraded: sendTelegramDegraded,
+  },
+} satisfies Record<NotificationProvider, Notif>;

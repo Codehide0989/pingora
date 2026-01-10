@@ -1,0 +1,4 @@
+{
+  "extends": "@pingora/tsconfig/nextjs.json",
+  "include": ["src", "*.ts"]
+}

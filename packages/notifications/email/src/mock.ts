@@ -1,0 +1,62 @@
+import type { Monitor, Notification } from "@pingora/db/src/schema";
+import { sendAlert, sendDegraded, sendRecovery } from "./index";
+
+const monitor: Monitor = {
+  id: 1,
+  name: "Pingora Docs",
+  url: "https://docs.pingora.dev",
+  periodicity: "10m",
+  jobType: "http",
+  active: true,
+  public: true,
+  createdAt: null,
+  updatedAt: null,
+  regions: ["ams", "fra"],
+  description: "Monitor Description",
+  headers: [],
+  body: "",
+  workspaceId: 1,
+  timeout: 45000,
+  degradedAfter: null,
+  assertions: null,
+  status: "active",
+  method: "GET",
+  deletedAt: null,
+  otelEndpoint: null,
+  otelHeaders: [],
+  followRedirects: false,
+  retry: 3,
+};
+
+const notification: Notification = {
+  id: 1,
+  name: "Email",
+  data: '{ "email": "max@pingora.dev" }',
+  createdAt: null,
+  updatedAt: null,
+  workspaceId: 1,
+  provider: "email",
+};
+
+const cronTimestamp = Date.now();
+
+if (process.env.NODE_ENV === "development") {
+  await sendDegraded({
+    monitor,
+    notification,
+    cronTimestamp,
+  });
+
+  await sendAlert({
+    monitor,
+    notification,
+    statusCode: 500,
+    cronTimestamp,
+  });
+
+  await sendRecovery({
+    monitor,
+    notification,
+    cronTimestamp,
+  });
+}

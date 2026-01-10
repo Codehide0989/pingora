@@ -1,0 +1,87 @@
+import { sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
+import {
+  boolean,
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  unique
+} from "drizzle-orm/pg-core";
+
+import { monitor } from "../monitors";
+import { user } from "../users/user";
+import { workspace } from "../workspaces";
+
+export const statusIncident = [
+  "triage",
+  "investigating",
+  "identified",
+  "monitoring",
+  "resolved",
+  "duplicated",
+] as const;
+
+export const incidentTable = pgTable(
+  "incident",
+  {
+    id: serial("id").primaryKey(),
+    title: text("title").default("").notNull(),
+    summary: text("summary").default("").notNull(),
+    status: text("status", { enum: statusIncident })
+      .default("triage")
+      .notNull(),
+
+    // Service affected by incident
+    monitorId: integer("monitor_id").references(() => monitor.id, {
+      onDelete: "set default",
+    }),
+
+    // Workspace where the incident happened
+    workspaceId: integer("workspace_id").references(() => workspace.id),
+    // Data related to incident timeline
+    startedAt: timestamp("started_at", { mode: "date" })
+      .notNull()
+      .defaultNow(),
+    // Who has acknowledged the incident
+    acknowledgedAt: timestamp("acknowledged_at", { mode: "date" }),
+    acknowledgedBy: integer("acknowledged_by").references(() => user.id),
+
+    // Who has resolved it
+    resolvedAt: timestamp("resolved_at", { mode: "date" }),
+    resolvedBy: integer("resolved_by").references(() => user.id),
+
+    incidentScreenshotUrl: text("incident_screenshot_url"),
+    recoveryScreenshotUrl: text("recovery_screenshot_url"),
+    // If the incident was auto resolved
+    autoResolved: boolean("auto_resolved").default(false),
+
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
+  },
+  (table) => {
+    return {
+      unique: unique().on(table.monitorId, table.startedAt),
+    };
+  },
+);
+
+export const incidentRelations = relations(incidentTable, ({ one }) => ({
+  monitor: one(monitor, {
+    fields: [incidentTable.monitorId],
+    references: [monitor.id],
+  }),
+  workspace: one(workspace, {
+    fields: [incidentTable.workspaceId],
+    references: [workspace.id],
+  }),
+  acknowledgedByUser: one(user, {
+    fields: [incidentTable.acknowledgedBy],
+    references: [user.id],
+  }),
+  resolvedByUser: one(user, {
+    fields: [incidentTable.resolvedBy],
+    references: [user.id],
+  }),
+}));

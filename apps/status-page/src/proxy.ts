@@ -1,0 +1,208 @@
+import { NextResponse } from "next/server";
+
+import { auth } from "@/lib/auth";
+
+import { db, sql } from "@pingora/db";
+import { page, selectPageSchema } from "@pingora/db/src/schema";
+import { getValidSubdomain } from "./lib/domain";
+import { createProtectedCookieKey } from "./lib/protected";
+
+export default auth(async (req) => {
+  const url = req.nextUrl.clone();
+  const response = NextResponse.next();
+  const cookies = req.cookies;
+  const headers = req.headers;
+  const host = headers.get("x-forwarded-host");
+
+  let prefix = "";
+  let type: "hostname" | "pathname";
+
+  const hostnames = host?.split(/[.:]/) ?? url.host.split(/[.:]/);
+  const pathnames = url.pathname.split("/");
+
+  const subdomain = getValidSubdomain(url.host);
+  console.log({
+    hostnames,
+    pathnames,
+    host,
+    urlHost: url.host,
+    subdomain,
+  });
+
+  if (
+    hostnames.length > 2 &&
+    hostnames[0] !== "www" &&
+    !url.host.endsWith(".vercel.app")
+  ) {
+    prefix = hostnames[0].toLowerCase();
+    type = "hostname";
+  } else {
+    prefix = pathnames[1].toLowerCase();
+    type = "pathname";
+  }
+
+  if (subdomain !== null) {
+    prefix = subdomain.toLowerCase();
+  }
+
+  console.log({ pathname: url.pathname, type, prefix, subdomain });
+
+  if (url.pathname === "/" && type !== "hostname" && subdomain === null) {
+    return response;
+  }
+
+  const query = await db
+    .select()
+    .from(page)
+    .where(
+      sql`lower(${page.slug}) = ${prefix} OR lower(${page.customDomain}) = ${prefix}`,
+    )
+    .get();
+
+  const validation = selectPageSchema.safeParse(query);
+
+  if (!validation.success) {
+    return response;
+  }
+
+  const _page = validation.data;
+
+  console.log({ slug: _page?.slug, customDomain: _page?.customDomain });
+
+  if (_page?.accessType === "password") {
+    const protectedCookie = cookies.get(createProtectedCookieKey(_page.slug));
+    const cookiePassword = protectedCookie ? protectedCookie.value : undefined;
+    const queryPassword = url.searchParams.get("pw");
+    const password = queryPassword || cookiePassword;
+
+    if (password !== _page.password && !url.pathname.endsWith("/login")) {
+      const { pathname, origin } = req.nextUrl;
+
+      // custom domain redirect
+      if (_page.customDomain && host !== `${_page.slug}.stpg.dev`) {
+        const redirect = pathname.replace(`/${_page.customDomain}`, "");
+        const url = new URL(
+          `https://${_page.customDomain}/login?redirect=${encodeURIComponent(
+            redirect,
+          )}`,
+        );
+        console.log("redirect to /login", url.toString());
+        return NextResponse.redirect(url);
+      }
+
+      const url = new URL(
+        `${origin}${
+          type === "pathname" ? `/${prefix}` : ""
+        }/login?redirect=${encodeURIComponent(pathname)}`,
+      );
+      return NextResponse.redirect(url);
+    }
+    if (password === _page.password && url.pathname.endsWith("/login")) {
+      const redirect = url.searchParams.get("redirect");
+
+      // custom domain redirect
+      if (_page.customDomain && host !== `${_page.slug}.stpg.dev`) {
+        const url = new URL(`https://${_page.customDomain}${redirect ?? "/"}`);
+        console.log("redirect to /", url.toString());
+        return NextResponse.redirect(url);
+      }
+
+      return NextResponse.redirect(
+        new URL(
+          `${req.nextUrl.origin}${
+            redirect ?? type === "pathname" ? `/${prefix}` : "/"
+          }`,
+        ),
+      );
+    }
+  }
+
+  if (_page.accessType === "email-domain") {
+    const { origin, pathname } = req.nextUrl;
+    const email = req.auth?.user?.email;
+    const emailDomain = email?.split("@")[1];
+    if (
+      !pathname.endsWith("/login") &&
+      (!emailDomain || !_page.authEmailDomains.includes(emailDomain))
+    ) {
+      const url = new URL(
+        `${origin}${type === "pathname" ? `/${prefix}` : ""}/login`,
+      );
+      return NextResponse.redirect(url);
+    }
+    if (
+      pathname.endsWith("/login") &&
+      emailDomain &&
+      _page.authEmailDomains.includes(emailDomain)
+    ) {
+      const url = new URL(
+        `${origin}${type === "pathname" ? `/${prefix}` : ""}`,
+      );
+      return NextResponse.redirect(url);
+    }
+  }
+
+  const proxy = req.headers.get("x-proxy");
+  console.log({ proxy });
+
+  if (proxy) {
+    const rewriteUrl = new URL(`/${prefix}${url.pathname}`, req.url);
+    // Preserve search params from original request
+    rewriteUrl.search = url.search;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  console.log({
+    customDomain: _page.customDomain,
+    host,
+    expectedHost: `${_page.slug}.stpg.dev`,
+  });
+  if (_page.customDomain && host !== `${_page.slug}.stpg.dev`) {
+    if (pathnames.length > 2 && !subdomain) {
+      const pathname = pathnames.slice(2).join("/");
+      const rewriteUrl = new URL(`/${_page.slug}/${pathname}`, req.url);
+      rewriteUrl.search = url.search;
+      return NextResponse.rewrite(rewriteUrl);
+    }
+    if (_page.customDomain && subdomain) {
+      console.log({ url: req.url });
+      // const vercelURL = process.env.VERCEL_URL || "www.stpg.dev";
+      // console.log({newUrl: vercelURL})
+      if (pathnames.length > 2) {
+        const pathname = pathnames.slice(1).join("/");
+
+        const rewriteUrl = new URL(
+          `${pathname}`,
+          `https://${_page.slug}.stpg.dev`,
+        );
+        console.log({ rewriteUrl });
+        rewriteUrl.search = url.search;
+        return NextResponse.rewrite(rewriteUrl);
+      }
+      const rewriteUrl = new URL(
+        `${url.pathname}`,
+        `https://${_page.slug}.stpg.dev`,
+      );
+      console.log({ rewriteUrl });
+      rewriteUrl.search = url.search;
+      return NextResponse.rewrite(rewriteUrl);
+    }
+    const rewriteUrl = new URL(`/${_page.slug}`, req.url);
+    console.log({ rewriteUrl });
+    rewriteUrl.search = url.search;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+  if (host?.includes("pingora.dev")) {
+    const rewriteUrl = new URL(`/${prefix}${url.pathname}`, req.url);
+    // Preserve search params from original request
+    rewriteUrl.search = url.search;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+  return response;
+});
+
+export const config = {
+  matcher: [
+    "/((?!api|assets|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+  ],
+};

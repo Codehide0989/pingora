@@ -1,0 +1,19 @@
+{
+  "name": "@pingora/notification-webhook",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@pingora/db": "workspace:*",
+    "@pingora/utils": "workspace:*",
+    "zod": "4.1.13"
+  },
+  "devDependencies": {
+    "@pingora/tsconfig": "workspace:*",
+    "@types/node": "24.0.8",
+    "bun-types": "1.3.1",
+    "typescript": "5.9.3"
+  }
+}

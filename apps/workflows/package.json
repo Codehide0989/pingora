@@ -1,0 +1,43 @@
+{
+  "name": "@pingora/workflows",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "NODE_ENV=production node dist/src/index.js",
+    "test": "tsx test"
+  },
+  "dependencies": {
+    "@google-cloud/tasks": "4.0.1",
+    "@hono/sentry": "1.2.2",
+    "@libsql/client": "0.15.15",
+    "@logtape/logtape": "1.1.2",
+    "@logtape/sentry": "1.1.2",
+    "@pingora/db": "workspace:*",
+    "@pingora/emails": "workspace:*",
+    "@pingora/notification-discord": "workspace:*",
+    "@pingora/notification-emails": "workspace:*",
+    "@pingora/notification-google-chat": "workspace:*",
+    "@pingora/notification-ntfy": "workspace:*",
+    "@pingora/notification-opsgenie": "workspace:*",
+    "@pingora/notification-pagerduty": "workspace:*",
+    "@pingora/notification-slack": "workspace:*",
+    "@pingora/notification-telegram": "workspace:*",
+    "@pingora/notification-twillio-sms": "workspace:*",
+    "@pingora/notification-twillio-whatsapp": "workspace:*",
+    "@pingora/notification-webhook": "workspace:*",
+    "@pingora/regions": "workspace:*",
+    "@pingora/tinybird": "workspace:*",
+    "@pingora/upstash": "workspace:*",
+    "@pingora/utils": "workspace:*",
+    "@upstash/qstash": "2.6.2",
+    "drizzle-orm": "0.44.4",
+    "effect": "3.19.12",
+    "hono": "4.5.3",
+    "limiter": "^3.0.0",
+    "zod": "4.1.13"
+  },
+  "devDependencies": {
+    "@pingora/tsconfig": "workspace:*",
+    "@types/bun": "latest",
+    "typescript": "5.9.3"
+  }
+}

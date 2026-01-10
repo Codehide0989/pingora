@@ -1,0 +1,19 @@
+{
+  "name": "@pingora/tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {},
+  "dependencies": {
+    "@pingora/db": "workspace:*",
+    "@pingora/tinybird": "workspace:*",
+    "zod": "4.1.13"
+  },
+  "devDependencies": {
+    "@pingora/tsconfig": "workspace:*",
+    "typescript": "5.9.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

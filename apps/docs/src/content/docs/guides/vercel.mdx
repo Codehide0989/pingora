@@ -1,0 +1,62 @@
+---
+title: Deploy to Vercel
+description: Learn how to deploy Pingora to Vercel.
+---
+
+ Pingora is designed to be easily deployed on Vercel. This guide will walk you through the steps to get your own instance running.
+
+## Prerequisites
+
+- A **GitHub** account to fork the repository.
+- A **Vercel** account for deployment.
+- A **Neon** account for the PostgreSQL database.
+- A **Checkly** account (optional) for synthetic monitoring.
+
+## 1. Database Setup (Neon)
+
+1. Create a new project in [Neon](https://neon.tech).
+2. Get your connection string. It should look like `postgresql://user:password@endpoint.neon.tech/neondb?sslmode=require`.
+3. Keep this handy, you will need it for the environment variables.
+
+## 2. Fork and Deploy
+
+1. Fork the [Pingora repository](https://github.com/pingora/pingora) to your GitHub account.
+2. Go to your [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New..."** -> **"Project"**.
+3. Import your forked repository.
+
+## 3. Environment Variables
+
+Configure the following environment variables in Vercel:
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | Your Neon Database Connection String | `postgresql://...` |
+| `NEXTAUTH_SECRET` | A random string for authentication security | `openssl rand -base64 32` |
+| `NEXTAUTH_URL` | The URL of your deployed application | `https://your-project.vercel.app` |
+
+*(Note: There might be other variables needed depending on enabled features like email notifications, etc. check `.env.example` in the repo root)*
+
+## 4. Build Settings
+
+Vercel usually detects Next.js automatically. Ensure the following settings:
+- **Framework Preset**: Next.js
+- **Root Directory**: `apps/web` (if deploying the dashboard/web app) OR leave empty if using monorepo settings correctly. Pingora is a monorepo, so you might need to configure the **Root Directory** to `apps/web` or `apps/dashboard` depending on which app you are deploying.
+
+For the **Dashboard** (`@pingora/web`):
+- **Root Directory**: `apps/web` (or `apps/dashboard` check the repo structure)
+- **Build Command**: `cd ../.. && pnpm build` (if custom build needed) or let Vercel handle turbo.
+
+**Recommended:** Since this is a Turborepo, Vercel supports it out of the box. Ensure your `vercel.json` (if present) or Vercel project settings are configured to use `turbo`.
+
+## 5. Deploy
+
+Click **Deploy**. Vercel will build your application and deploy it.
+
+## Troubleshooting
+
+- **Database Connection**: Ensure `sslmode=require` is present in your connection string.
+- **Build Errors**: Check the build logs. If you see missing dependencies, ensure you are running `pnpm install` correctly (Vercel uses `pnpm` if `pnpm-lock.yaml` is present).
+
+## Post-Deployment
+
+Once deployed, visit your `NEXTAUTH_URL` to log in and start monitoring!

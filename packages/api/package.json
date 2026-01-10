@@ -1,0 +1,47 @@
+{
+  "name": "@pingora/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "bun test",
+    "env": "bun env.ts"
+  },
+  "dependencies": {
+    "@pingora/analytics": "workspace:*",
+    "@pingora/assertions": "workspace:*",
+    "@pingora/db": "workspace:*",
+    "@pingora/emails": "workspace:*",
+    "@pingora/error": "workspace:*",
+    "@pingora/notification-google-chat": "workspace:*",
+    "@pingora/notification-telegram": "workspace:*",
+    "@pingora/notification-twillio-whatsapp": "workspace:*",
+    "@pingora/regions": "workspace:*",
+    "@pingora/tinybird": "workspace:*",
+    "@pingora/upstash": "workspace:*",
+    "@pingora/utils": "workspace:*",
+    "@t3-oss/env-core": "0.13.10",
+    "@trpc/client": "11.4.4",
+    "@trpc/server": "11.4.4",
+    "@unkey/api": "2.2.0",
+    "@vercel/blob": "0.23.3",
+    "date-fns": "2.30.0",
+    "nanoid": "5.0.7",
+    "nanoid-dictionary": "5.0.0-beta.1",
+    "next": "16.0.10",
+    "random-word-slugs": "0.1.7",
+
+    "superjson": "2.2.2",
+    "zod": "4.1.13"
+  },
+  "devDependencies": {
+    "@pingora/tsconfig": "workspace:*",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "bun-types": "1.0.8",
+    "typescript": "5.9.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

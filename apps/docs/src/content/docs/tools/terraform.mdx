@@ -1,0 +1,27 @@
+---
+title: Terraform Provider
+description:
+  "Use pingora Terraform provider to manage your monitors and status page."
+---
+
+Here you can find the official pingora Terraform provider. This provider
+allows you to manage your monitors and status page using Terraform.
+
+https://registry.terraform.io/providers/pingoraHQ/pingora/latest
+
+## Usage
+
+```
+provider "pingora" {
+  pingora_api_token= "YOUR_API_TOKEN"
+}
+
+resource "pingora_monitor" "my_monitor" {
+  url   = "https://www.pingora.dev"
+  regions= ["iad", "jnb"]
+  periodicity =  "10m"
+  name = "test-monitor"
+  active = true
+  description = "This is a test monitor"
+}
+```

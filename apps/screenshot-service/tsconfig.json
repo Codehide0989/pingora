@@ -1,0 +1,5 @@
+{
+  "extends": "@pingora/tsconfig/base.json",
+  "include": ["src", "*.ts", "**/*.ts"],
+  "compilerOptions": {}
+}

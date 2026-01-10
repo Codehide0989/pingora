@@ -1,0 +1,20 @@
+{
+  "name": "@pingora/utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {},
+  "dependencies": {
+    "@pingora/assertions": "workspace:*",
+    "@pingora/db": "workspace:*",
+    "@pingora/regions": "workspace:*",
+    "zod": "4.1.13"
+  },
+  "devDependencies": {
+    "@pingora/tsconfig": "workspace:*",
+    "typescript": "5.9.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,194 @@
+# yaml-language-server: $schema=https://www.pingora.dev/schema.json
+
+"pingora":
+  active: true
+  description: "Our website \U0001F310"
+  frequency: 10m
+  kind: http
+  name: 'Pingora '
+  public: true
+  regions:
+  - ams
+  - iad
+  - jnb
+  - gru
+  - syd
+  - cdg
+  - bom
+  - sin
+  - fra
+  - lhr
+  - arn
+  - den
+  - dfw
+  - ord
+  - lax
+  - sjc
+  - ewr
+  - yyz
+  - koyeb_fra
+  - koyeb_par
+  - koyeb_sfo
+  - koyeb_sin
+  - koyeb_tyo
+  - koyeb_was
+  - railway_asia-southeast1-eqsg3a
+  - railway_europe-west4-drams3a
+  - railway_us-east4-eqdc4a
+  - railway_us-west2
+  request:
+    method: GET
+    url: https://www.pingora.dev
+  retry: 3
+"pingora status page":
+  active: true
+  description: "We are monitoring our own Status Page  \U0001F4DD"
+  frequency: 10m
+  kind: http
+  name: Pingora  Status Page
+  public: true
+  regions:
+  - ams
+  - iad
+  - jnb
+  - gru
+  - syd
+  - bom
+  - sin
+  - fra
+  - lhr
+  - cdg
+  - arn
+  - den
+  - dfw
+  - ord
+  - lax
+  - sjc
+  - ewr
+  - yyz
+  - koyeb_fra
+  - koyeb_par
+  - koyeb_sfo
+  - koyeb_sin
+  - koyeb_tyo
+  - koyeb_was
+  - railway_asia-southeast1-eqsg3a
+  - railway_europe-west4-drams3a
+  - railway_us-east4-eqdc4a
+  - railway_us-west2
+
+  request:
+    method: GET
+    url: https://status.pingora.dev/
+  retry: 3
+"pingora api server":
+  active: true
+  description: "Our API Server \U0001F50C"
+  frequency: 10m
+  kind: http
+  name: Pingora API
+  public: true
+  regions:
+  - ams
+  - iad
+  - jnb
+  - gru
+  - syd
+  - bom
+  - sin
+  - fra
+  - lhr
+  - cdg
+  - arn
+  - den
+  - dfw
+  - ord
+  - lax
+  - sjc
+  - ewr
+  - yyz
+  - koyeb_fra
+  - koyeb_par
+  - koyeb_sfo
+  - koyeb_sin
+  - koyeb_tyo
+  - koyeb_was
+  - railway_asia-southeast1-eqsg3a
+  - railway_europe-west4-drams3a
+  - railway_us-east4-eqdc4a
+  - railway_us-west2
+  request:
+    method: GET
+    url: https://api.pingora.dev/ping
+  retry: 3
+"openstat.us":
+  active: true
+  frequency: 1m
+  kind: http
+  name: openstat.us
+  public: true
+  regions:
+  - ams
+  - iad
+  - syd
+  - gru
+  - sin
+  request:
+    method: GET
+    url: https://openstat.us
+  retry: 3
+"pingora astro status page":
+  active: true
+  frequency: 1h
+  kind: http
+  name: Pingora Astro Status Page
+  public: true
+  regions:
+  - ams
+  - iad
+  - sin
+  - jnb
+  - syd
+  - gru
+  request:
+    method: GET
+    url: https://astro.openstat.us/
+  retry: 3
+"pingora tcp check":
+  active: true
+  frequency: 1m
+  kind: tcp
+  name: 'Pingora TCP'
+  regions:
+  - ams
+  - iad
+  - jnb
+  - gru
+  - syd
+  - bom
+  - sin
+  - fra
+  - lhr
+  - cdg
+  - arn
+  - den
+  - dfw
+  - ord
+  - lax
+  - sjc
+  - ewr
+  - yyz
+  - koyeb_fra
+  - koyeb_par
+  - koyeb_sfo
+  - koyeb_sin
+  - koyeb_tyo
+  - koyeb_was
+  - railway_asia-southeast1-eqsg3a
+  - railway_europe-west4-drams3a
+  - railway_us-east4-eqdc4a
+  - railway_us-west2
+  request:
+    host: pingora.dev
+    port: 443
+  retry: 3

@@ -1,0 +1,23 @@
+---
+title: "Pingora GitHub Actions"
+description: "Run your Pingora synthetic checks as part of your GitHub Workflow."
+image: "/assets/changelog/github-action.png"
+publishedAt: "2025-02-18"
+author: "pingora"
+category: "monitoring"
+---
+
+We have published our GitHub Actions, It lets your run your Pingora synthetic checks as part of your GitHub Workflow.
+
+The action is available on [GitHub Marketplace](https://github.com/marketplace/actions/pingora-synthetics-ci)
+
+Here's a simple example of how to use it:
+
+```yaml
+- name: Run Pingora Synthetics CI
+    uses: pingorahq/pingora-github-action@v1
+    with:
+        api_key: ${{ secrets.PINGORA_API_KEY }}
+```
+
+Here's a GitHub repo with the action in use: [pingorahq/pingora-github-action-example](https://github.com/pingoraHQ/github-action-tester)

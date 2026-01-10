@@ -1,0 +1,86 @@
+"use client";
+
+import { QuickActions } from "@/components/dropdowns/quick-actions";
+import { NavFeedback } from "@/components/nav/nav-feedback";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { getActions } from "@/data/status-pages.client";
+import { useTRPC } from "@/lib/trpc/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Globe } from "lucide-react";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+export function NavActions() {
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const pathname = usePathname();
+
+  const { data: statusPage } = useQuery(
+    trpc.page.get.queryOptions({ id: Number.parseInt(id) }),
+  );
+
+  const deleteStatusPageMutation = useMutation(
+    trpc.page.delete.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.page.list.queryKey(),
+        });
+        if (pathname.includes(`/status-pages/${id}`)) {
+          router.push("/status-pages");
+        }
+      },
+    }),
+  );
+
+  const actions = getActions({
+    edit: () => router.push(`/status-pages/${id}/edit`),
+    "copy-id": async () => {
+      await navigator.clipboard.writeText(id);
+      toast.success("Status Page ID copied to clipboard");
+    },
+  });
+
+  if (!statusPage) return null;
+
+  return (
+    <div className="flex items-center gap-2 text-sm">
+      <NavFeedback />
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" className="group h-7 w-7" asChild>
+              <a
+                  statusPage.customDomain || (process.env.NEXT_PUBLIC_URL?.includes("localhost") ? `http://${statusPage.slug}.localhost:3003` : `https://${statusPage.slug}.pingora.dev`)
+                }`
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Globe className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
+              </a>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>View Page</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <QuickActions
+        actions={actions}
+        deleteAction={{
+          confirmationValue: statusPage.title ?? "status page",
+          submitAction: async () => {
+            await deleteStatusPageMutation.mutateAsync({
+              id: Number.parseInt(id),
+            });
+          },
+        }}
+      />
+    </div>
+  );
+}

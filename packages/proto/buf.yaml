@@ -1,0 +1,8 @@
+version: v2
+
+modules:
+   - path: .
+     name: buf.build/pingora/private-location
+lint:
+  use:
+    - STANDARD

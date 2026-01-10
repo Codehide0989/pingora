@@ -1,0 +1,17 @@
+# Pingora
+
+> Pingora is an open-source global uptime monitoring platform that offers a status page and monitoring as code.
+
+## Features
+
+- Uptime Monitoring: Monitor the availability and performance of your services globally.
+- Status Page: Create a custom status page to display the status of your services.
+- Monitoring as Code: Define your monitoring checks using YAML.
+- Alerting: Configure email, Slack, or other notification channels for alerts.
+- CLI: Manage Pingora using a command-line interface.
+
+## Documentation
+
+- [Documentation](https://docs.pingora.dev/)
+- [Documentation llms docs](https://docs.pingora.dev/llms.txt)
+- [Documentation llms docs full](https://docs.pingora.dev/llms-full.txt)
