@@ -1,5 +1,4 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import crypto from "crypto";
 import bcrypt from "bcryptjs";
 
 /**
@@ -11,7 +10,12 @@ export async function generateApiKey(): Promise<{
   prefix: string;
   hash: string;
 }> {
-  const randomBytes = crypto.randomBytes(16).toString("hex"); // 32 hex chars
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  const randomBytes = Array.from(array)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join(""); // 32 hex chars
+
   const token = `os_${randomBytes}`;
   const prefix = token.slice(0, 11); // "os_" (3 chars) + 8 hex chars = 11 total
   const hash = await bcrypt.hash(token, 10);

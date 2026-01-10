@@ -59,7 +59,7 @@ export function NavActions() {
             <Button variant="ghost" size="sm" className="group h-7 w-7" asChild>
               <a
                   statusPage.customDomain || (process.env.NEXT_PUBLIC_URL?.includes("localhost") ? `http://${statusPage.slug}.localhost:3003` : `https://${statusPage.slug}.pingora.dev`)
-                }`
+                }
                 target="_blank"
                 rel="noreferrer"
               >
