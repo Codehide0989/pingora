@@ -22,11 +22,11 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTRPC } from "@/lib/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+
 
 export default function Page() {
   const trpc = useTRPC();
-  const { data: user } = useQuery(trpc.user.get.queryOptions());
+  const { data: user } = trpc.user.get.useQuery();
 
   if (!user) return null;
 
